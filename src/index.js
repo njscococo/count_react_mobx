@@ -15,6 +15,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 //import Temperature from './index_temperature';
 
 import Counter from './components/counter';
+import GithubUser from './components/github';
+import MRUser from './components/mr';
 
 //injectTapEventPlugin();
 
@@ -22,8 +24,11 @@ import Counter from './components/counter';
 class App extends React.Component{
   render(){
     return (
-      <MuiThemeProvider>      
-        <Counter  />
+      <MuiThemeProvider>
+        <div>
+          <GithubUser />
+          <MRUser />
+        </div> 
       </MuiThemeProvider>
     );
   }
