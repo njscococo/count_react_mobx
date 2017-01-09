@@ -6,16 +6,20 @@ import DevTools from 'mobx-react-devtools';
 import axios from 'axios';
 
 //material-ui
-//import injectTapEventPlugin from 'react-tap-event-plugin';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import RaisedButton from 'material-ui/RaisedButton';
+import Avatar from 'material-ui/Avatar';
 import { Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn }
   from 'material-ui/Table';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 
 import Temperature from './index_temperature';
 import MyTableRowColumn from './MyTableRowColumn';
 
-//injectTapEventPlugin();
+import userInfo from '../store/userState';
+
+injectTapEventPlugin();
 
 // const appState = observable({
 //   count: 0,
@@ -39,16 +43,16 @@ class Counter extends React.Component {
     //let reslength = 0;
     axios.get(apiurl).then((res) => {
       console.log('res:', res.data);
-      this.props.appState.userData = res.data;
+      //this.props.appState.userData = res.data;
+      userInfo.userData = res.data;
 
     });
-
   }
 
   @action
   handleInc() {
     //console.log("+", typeof(this.getUserByName()));
-    this.props.appState.count++;
+    userInfo.count++;
     //this.getUserByName('mobxjs');
 
   }
@@ -56,23 +60,26 @@ class Counter extends React.Component {
   @action
   handleDec() {
     console.log("-");
-    this.props.appState.count--;
+    userInfo.count--;
   }
 
   @action
   handleTextChange(e) {
-    this.props.appState.searchText = e.target.value;
+    userInfo.searchText = e.target.value;
 
   }
 
   @action
-  clickSend() {
-    //this.getUserByName(this.props.appState.searchText );
+  searchGit() {
+    this.getUserByName(userInfo.searchText );
+  }
 
+  @action
+  searchMR() {
     let apiurl = "http://localhost:59219/api/reacttest";
     axios.get(apiurl).then((res) => {
       console.log('res:', res.data[0].APPL_NAME);
-      this.props.appState.mrUser = res.data;
+      userInfo.mrUser = res.data;
 
     });
   }
@@ -84,14 +91,16 @@ class Counter extends React.Component {
     //console.log("showCell:", this.props.appState.mrUser[e].APPL_NAME);
   }
 
-  changeName() {
-    console.log('changeName:');
+  @action
+  changeName() {        
+    userInfo.changeName = true;
+    console.log('changeName:', userInfo.changeName);
   }
 
   render() {
     //console.log(this.props);
     let table;
-    if(this.props.appState.mrUser.length>0){
+    if(userInfo.mrUser.length>0){
           table = 
           <Table onCellClick={this.changeName.bind(this)}  >
             <TableHeader>
@@ -107,7 +116,7 @@ class Counter extends React.Component {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {this.props.appState.mrUser.map((row, index) => (
+              {userInfo.mrUser.map((row, index) => (
                 <TableRow key={index} selected={row.selected}>
                   <TableRowColumn>{index}</TableRowColumn>
                   <TableRowColumn>{row.APPL_NAME}</TableRowColumn>
@@ -129,22 +138,23 @@ class Counter extends React.Component {
             </TableFooter>
           </Table>
         }
-    return (
-      <div >
 
-        Counter: {this.props.appState.count}<br />
-        Login ID: {this.props.appState.userData.id} <br />
-        <img src={this.props.appState.userData.avatar_url} style={styles.avatarImg} /> <br />
+    let inputText_Name = <input type="text" value={this.props.value} onChange={this.handleTextChange.bind(this)} />;
+
+    return (
+      <div>
+        Counter: {userInfo.count}<br />
+        Login ID: {userInfo.userData.id} <br />
+        <img src={userInfo.userData.avatar_url} style={styles.avatarImg} /> <br />
+        <Avatar src={userInfo.userData.avatar_url} /> <br />
         <input type="text" value={this.props.value} onChange={this.handleTextChange.bind(this)} />
-        <button onClick={this.clickSend.bind(this)}>Search</button>
+        <RaisedButton label="Search MR" onClick={this.searchMR.bind(this)} primary={true}/>
+        <FlatButton label="Search Github" onClick={this.searchGit.bind(this)} primary={true}></FlatButton>
         <button onClick={this.handleInc.bind(this)}>+</button>
         <button onClick={this.handleDec.bind(this)}>-</button>
-        <div>{this.props.appState.searchText}</div>
+        <div>{userInfo.searchText}</div>
 
         {table}
-
-
-
 
         <Temperature />
         <div>
