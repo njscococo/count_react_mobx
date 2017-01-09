@@ -6,7 +6,7 @@ import DevTools from 'mobx-react-devtools';
 import axios from 'axios';
 
 //material-ui
-import injectTapEventPlugin from 'react-tap-event-plugin';
+//import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Avatar from 'material-ui/Avatar';
 import { Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn }
@@ -19,27 +19,13 @@ import MyTableRowColumn from './MyTableRowColumn';
 
 import userInfo from '../store/userState';
 
-// const appState = observable({
-//   count: 0,
-//   searchText: '',
-//   userData: {}
-// });
-const styles = {
-  avatarImg: {
-    height: 100,
-    width: 100
-  }
-}
 
 @observer
 class MRUser extends React.Component {
 
- 
-
   @action
   handleTextChange(e) {
     userInfo.searchText = e.target.value;
-
   }
 
   @action
@@ -104,12 +90,14 @@ class MRUser extends React.Component {
     let inputText_Name = <input type="text" value={this.props.value} onChange={this.handleTextChange.bind(this)} />;
 
     return (
+      <MuiThemeProvider>
       <div>
         <input type="text" value={this.props.value} onChange={this.handleTextChange.bind(this)} />
         <RaisedButton label="Search MR" onClick={this.searchMR.bind(this)} primary={true}/>
         {table}
         
       </div>
+      </MuiThemeProvider>
     );
   }
 }

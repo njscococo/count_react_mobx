@@ -6,7 +6,7 @@ import DevTools from 'mobx-react-devtools';
 import axios from 'axios';
 
 //material-ui
-import injectTapEventPlugin from 'react-tap-event-plugin';
+//import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Avatar from 'material-ui/Avatar';
 import { Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn }
@@ -19,11 +19,6 @@ import MyTableRowColumn from './MyTableRowColumn';
 
 import userInfo from '../store/userState';
 
-// const appState = observable({
-//   count: 0,
-//   searchText: '',
-//   userData: {}
-// });
 const styles = {
   avatarImg: {
     height: 100,
@@ -70,6 +65,7 @@ class GithubUser extends React.Component {
     let inputText_Name = <input type="text" value={this.props.value} onChange={this.handleTextChange.bind(this)} />;
 
     return (
+        <MuiThemeProvider>
       <div>
         Counter: {userInfo.count}<br />
         Login ID: {userInfo.userData.id} <br />
@@ -80,6 +76,7 @@ class GithubUser extends React.Component {
         <FlatButton label="Search Github" onClick={this.searchGit.bind(this)} primary={true}></FlatButton>
         
       </div>
+      </MuiThemeProvider >
     );
   }
 }
