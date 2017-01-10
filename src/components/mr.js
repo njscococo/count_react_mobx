@@ -13,6 +13,9 @@ import { Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow
   from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
+
+//import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
 import Temperature from './index_temperature';
 import MyTableRowColumn from './MyTableRowColumn';
@@ -24,8 +27,9 @@ import userInfo from '../store/userState';
 class MRUser extends React.Component {
 
   @action
-  handleTextChange(e) {
-    userInfo.searchText = e.target.value;
+  handleTextChange(e, newValue) {
+    userInfo.searchText = newValue;
+    console.log('mr newValue:', newValue);
   }
 
   @action
@@ -38,6 +42,14 @@ class MRUser extends React.Component {
     });
   }
 
+  filterMR() {
+    console.log(this.test );
+  }
+
+  componentDidMount() {
+    this.searchMR();
+  }
+
   showCell(e, f, g) {
     //console.log("showCell:", e);
     //console.log("showCell:", f);
@@ -48,55 +60,70 @@ class MRUser extends React.Component {
   render() {
     //console.log(this.props);
     let table;
-    if(userInfo.mrUser.length>0){
-          table = 
-          <Table  >
-            <TableHeader>
-              <TableRow>
-                <TableHeaderColumn colSpan="3" tooltip="Super Header" style={{ textAlign: 'center' }}>
-                  Super Header
+    let rows = [];
+    if (userInfo.mrUser.length > 0) {
+      {
+        userInfo.mrUser.forEach((row, index) => {
+          if (row.LastName.indexOf(userInfo.searchText) === -1) {
+            return;
+          }
+          rows.push(<TableRow key={row.EmployeeID} selected={row.selected}>
+            <TableRowColumn>{row.EmployeeID}</TableRowColumn>
+            <TableRowColumn>{row.LastName}</TableRowColumn>
+            <TableRowColumn>{row.FirstName} </TableRowColumn>
+            <TableRowColumn>{row.Title} </TableRowColumn>
+          </TableRow>);
+        })
+      }
+
+      table =
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHeaderColumn colSpan="4" tooltip="Super Header" style={{ textAlign: 'center' }}>
+                Super Header
               </TableHeaderColumn>
-              </TableRow>
-              <TableRow>
-                <TableHeaderColumn tooltip="The ID">ID</TableHeaderColumn>
-                <TableHeaderColumn tooltip="The Name">Name</TableHeaderColumn>
-                <TableHeaderColumn tooltip="The Status">Status</TableHeaderColumn>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {userInfo.mrUser.map((row, index) => (
-                <TableRow key={index} selected={row.selected}>
-                  <TableRowColumn>{index}</TableRowColumn>
-                  <TableRowColumn>{row.APPL_NAME}</TableRowColumn>
-                  <TableRowColumn>{row.APPL_ID} </TableRowColumn>
-                </TableRow>
-              ))}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TableRowColumn>ID</TableRowColumn>
-                <TableRowColumn>Name</TableRowColumn>
-                <TableRowColumn>Status</TableRowColumn>
-              </TableRow>
-              <TableRow>
-                <TableRowColumn colSpan="3" style={{ textAlign: 'center' }}>
-                  Super Footer
+            </TableRow>
+            <TableRow>
+              <TableHeaderColumn tooltip="The ID">ID</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Last Name">Last Name</TableHeaderColumn>
+              <TableHeaderColumn tooltip="First Name">First Name</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Title">Title</TableHeaderColumn>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {rows}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TableRowColumn>ID</TableRowColumn>
+              <TableRowColumn>Last Name</TableRowColumn>
+              <TableRowColumn>First Name</TableRowColumn>
+              <TableRowColumn>Title</TableRowColumn>
+            </TableRow>
+            <TableRow>
+              <TableRowColumn colSpan="4" style={{ textAlign: 'center' }}>
+                Super Footer
               </TableRowColumn>
-              </TableRow>
-            </TableFooter>
-          </Table>
-        }
+            </TableRow>
+          </TableFooter>
+        </Table>
+    }
 
     let inputText_Name = <input type="text" value={this.props.value} onChange={this.handleTextChange.bind(this)} />;
 
     return (
       <MuiThemeProvider>
-      <div>
-        <input type="text" value={this.props.value} onChange={this.handleTextChange.bind(this)} />
-        <RaisedButton label="Search MR" onClick={this.searchMR.bind(this)} primary={true}/>
-        {table}
-        
-      </div>
+        <div>
+          <TextField hintText="Hint Text"
+            floatingLabelText="Floating Label Text"
+            onChange={this.handleTextChange.bind(this)}
+            ref={(input)=>{ this.test = input; }}
+            />
+
+          <RaisedButton label="Search MR" onClick={this.filterMR.bind(this)} primary={true} />
+          {table}
+        </div>
       </MuiThemeProvider>
     );
   }

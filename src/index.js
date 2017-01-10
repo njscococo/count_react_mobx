@@ -31,6 +31,7 @@ class App extends React.Component {
           <li><Link to="/MRUser">MRUser</Link></li>
         </ul>
         {this.props.children}
+        <DevTools />
       </div>
     );
   }
